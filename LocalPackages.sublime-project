@@ -1,0 +1,26 @@
+{
+	"folders":
+	[
+		{
+			"follow_symlinks": true,
+			"path": "."
+		}
+	],
+	"javatar":
+	{
+		"jdk_version":
+		{
+			"JDK1.8.0u60":
+			{
+				"path": "/Library/Java/JavaVirtualMachines/jdk1.8.0_60.jdk/Contents/Home/bin",
+				"update": "60",
+				"version": "1.8.0"
+			},
+			"use": ""
+		}
+	},
+	"local_packages":
+	{
+		"enabled": false
+	}
+}

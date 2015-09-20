@@ -1,0 +1,20 @@
+[
+    {
+        "caption": "Local Packages: Create Local Dependencies",
+        "command": "local_packages_create"
+    },
+    {
+        "caption": "Preferences: Local Packages Settings – Default",
+        "command": "open_file", "args":
+        {
+            "file": "${packages}/LocalPackages/LocalPackages.sublime-settings"
+        }
+    },
+    {
+        "caption": "Preferences: Local Packages Settings – User",
+        "command": "open_file", "args":
+        {
+            "file": "${packages}/User/LocalPackages.sublime-settings"
+        }
+    }
+]
