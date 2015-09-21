@@ -1,11 +1,11 @@
 import sublime
-from .package_evaluator import PackageEvaluatorThread
 from .event_handler import EventHandler
 from .settings import Settings
 
 package_control_installed = False
-LOCAL_PACKAGES_VERSION = "0.1.0"
+LOCAL_PACKAGES_VERSION = "0.1.1"
 evaluating = False
+retry_times = 3
 
 
 def plugin_loaded():
@@ -16,15 +16,24 @@ def plugin_loaded():
         EventHandler().ON_LOAD
     )
     print("[Local Packages] v%s" % (LOCAL_PACKAGES_VERSION))
+    check_package_control()
+
+
+def check_package_control():
     try:
-        __import__("Package Control")
+        __import__("Package Control").package_control
         global package_control_installed
         package_control_installed = True
     except:
-        sublime.error_message(
-            "Package Control is not found.\n\n" +
-            "Local Packages will now disabled"
-        )
+        global retry_times
+        if retry_times > 0:
+            retry_times -= 1
+            sublime.set_timeout(check_package_control, 3000)
+        else:
+            sublime.error_message(
+                "Package Control is not found.\n\n" +
+                "Local Packages will now disabled"
+            )
         return
     evaluate_install()
 
@@ -34,6 +43,7 @@ def evaluate_install(view=None):
     if evaluating:
         return
     print("[Local Packages] Evaluating missing packages")
+    from .package_evaluator import PackageEvaluatorThread
     evaluating = True
     PackageEvaluatorThread(
         window=sublime.active_window(),
