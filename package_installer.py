@@ -62,6 +62,7 @@ class PackagesInstallerThread(threading.Thread, PackageInstaller):
         if len(self.missing_packages) <= 0:
             if self.callback:
                 self.callback(self.failed_packages)
+            return
         missing_package = self.missing_packages[0]
         self.missing_packages = self.missing_packages[1:]
         if missing_package in self.available_packages:
