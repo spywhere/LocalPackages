@@ -11,10 +11,6 @@ retry_times = 3
 def plugin_loaded():
     Settings.reset()
     Settings.startup()
-    EventHandler().register_handler(
-        evaluate_install,
-        EventHandler().ON_LOAD
-    )
     print("[Local Packages] v%s" % (LOCAL_PACKAGES_VERSION))
     check_package_control()
 
@@ -35,6 +31,10 @@ def check_package_control():
                 "Local Packages will now disabled"
             )
         return
+    EventHandler().register_handler(
+        evaluate_install,
+        EventHandler().ON_LOAD
+    )
     evaluate_install()
 
 
