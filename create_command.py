@@ -10,6 +10,7 @@ import sublime
 import sublime_plugin
 import threading
 import os
+from .settings import Settings
 
 
 class LocalPackagesCreateCommand(sublime_plugin.WindowCommand):
@@ -46,8 +47,25 @@ class PackageSelectionThread(threading.Thread, ExistingPackagesCommand):
 
     def load_file(self):
         self.package_selection = {}
+
+        if len(self.window.folders()) <= 0:
+            return
+        
+        dep_folders = []
+        active_view = self.window.active_view()
+        if active_view and active_view.file_name():
+            dep_folders = [
+                folder for folder in self.window.folders() if
+                active_view.file_name().startswith(folder)
+            ]
+        if len(dep_folders) <= 0 and Settings().get("fallback_to_first_folder"):
+            dep_folders = self.window.folders()
+
+        if len(dep_folders) <= 0:
+            return
+
         dependency_path = None
-        for folder in self.window.folders():
+        for folder in dep_folders:
             for file_name in os.listdir(folder):
                 file_path = os.path.join(folder, file_name)
                 if (os.path.isfile(file_path) and
@@ -72,9 +90,27 @@ class PackageSelectionThread(threading.Thread, ExistingPackagesCommand):
                 "No folder opened. Local dependency creation cancelled."
             )
             return
+        
+        dep_folders = []
+        active_view = self.window.active_view()
+        if active_view and active_view.file_name():
+            dep_folders = [
+                folder for folder in self.window.folders() if
+                active_view.file_name().startswith(folder)
+            ]
+        if len(dep_folders) <= 0 and Settings().get("fallback_to_first_folder"):
+            dep_folders = self.window.folders()
+
+        if len(dep_folders) <= 0:
+            sublime.error_message(
+                "Cannot find root folder. " +
+                "Please save the document and try to run the command again."
+            )
+            return
+
         dep_file = open(os.path.join(
-            self.window.folders()[0],
-            os.path.basename(self.window.folders()[0]) + ".sublime-local-dependency"
+            dep_folders[0],
+            os.path.basename(dep_folders[0]) + ".sublime-local-dependency"
         ), "w")
         dependencies = {
             "packages": []

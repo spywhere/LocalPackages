@@ -3,7 +3,7 @@ from .event_handler import EventHandler
 from .settings import Settings
 
 package_control_installed = False
-LOCAL_PACKAGES_VERSION = "0.1.2"
+LOCAL_PACKAGES_VERSION = "0.1.3"
 evaluating = False
 retry_times = 3
 

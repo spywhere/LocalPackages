@@ -43,6 +43,13 @@ class PackageEvaluatorThread(threading.Thread, ExistingPackagesCommand):
     def load_file(self):
         self.package_selection = {}
         dependency_path = None
+
+        if (
+            not Settings().get("install_on_multiple_folders") and
+            len(self.window.folders()) > 1
+        ):
+            return
+
         for folder in self.window.folders():
             for file_name in os.listdir(folder):
                 file_path = os.path.join(folder, file_name)

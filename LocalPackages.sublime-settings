@@ -3,5 +3,12 @@
     "debug": false,
 
     // Enable the automatic install
-    "enabled": true
+    "enabled": true,
+
+    // Install dependencies from the first folder when open multiple folders
+    "install_on_multiple_folders": false,
+
+    // Create dependency file in first folder instead of ignoring
+    //   the creation process
+    "fallback_to_first_folder": true
 }
