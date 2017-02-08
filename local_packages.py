@@ -5,6 +5,7 @@ from .settings import Settings
 package_control_installed = False
 LOCAL_PACKAGES_VERSION = "0.1.3"
 evaluating = False
+already_evaluate = False
 retry_times = 3
 
 
@@ -39,10 +40,11 @@ def check_package_control():
 
 
 def evaluate_install(view=None):
-    global evaluating
+    global evaluating, already_evaluate
     if evaluating:
         return
-    print("[Local Packages] Evaluating missing packages")
+    if not already_evaluate:
+        print("[Local Packages] Evaluating missing packages")
     from .package_evaluator import PackageEvaluatorThread
     evaluating = True
     PackageEvaluatorThread(
@@ -52,8 +54,10 @@ def evaluate_install(view=None):
 
 
 def on_installed(failed_packages=[]):
-    global evaluating
+    global evaluating, already_evaluate
     evaluating = False
+    if already_evaluate:
+        return
     if len(failed_packages) > 0:
         msg = "Local Packages failed to install %s missing packages...\n" % (
             len(failed_packages)
@@ -69,3 +73,4 @@ def on_installed(failed_packages=[]):
         sublime.error_message(msg)
     else:
         print("[Local Packages] Dependencies already installed")
+    already_evaluate = True
